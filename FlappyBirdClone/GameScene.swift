@@ -13,9 +13,10 @@ struct PhysicsCategory{
     static let Character : UInt32 = 0x1 << 1
     static let Floor : UInt32 = 0x1 << 2
     static let Pillar : UInt32 = 0x1 << 3
+    static let Score : UInt32 = 0x1 << 4
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     /*
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
@@ -24,23 +25,26 @@ class GameScene: SKScene {
     var Character = SKSpriteNode()
     var Grass = [SKSpriteNode]()
     var Test = SKSpriteNode()
+    var Rock = SKSpriteNode()
     
     var wallPair = SKNode()
     var moveAndRemove = SKAction()
     var gameStarted = Bool()
-    // var Jump = SKSpriteNode()
+    
+    var score = Int()
 
     
     override func didMove(to view: SKView) {
         
+        self.physicsWorld.contactDelegate = self
+        
+        // GRASS
         Test = SKSpriteNode(imageNamed: "Grass")
         Test.setScale(2)
         
         let tileNum = Int(ceil((self.frame.width / Test.frame.width) + 1))
         var count = 0
         let Floor = SKNode()
-        //print(self.frame.height)
-        // print(self.frame.width)
         
         repeat{
         
@@ -67,6 +71,24 @@ class GameScene: SKScene {
         self.addChild(Floor)
         
         
+        // GRAVEL
+        count = 0
+        
+        repeat{
+        
+            Rock = SKSpriteNode(imageNamed: "Rock")
+            Rock.setScale(2)
+            
+            Rock.position = CGPoint(x: (CGFloat(count)*Rock.frame.width)-self.frame.width/2,  y: -self.frame.height/2)
+         
+            Rock.zPosition = 4
+            self.addChild(Rock)
+            count+=1
+            
+        }while(count < tileNum)
+        
+        
+        // CHARACTER
         Character = SKSpriteNode(imageNamed: "Character")
         Character.size = CGSize(width: self.frame.width/2 * 0.3, height: self.frame.height/2 * 0.25)
         Character.position = CGPoint(x: 0 - self.frame.width/4, y: Floor.frame.height + Character.frame.height - self.frame.height/2)
@@ -74,37 +96,61 @@ class GameScene: SKScene {
         Character.physicsBody = SKPhysicsBody(rectangleOf: Character.size)
         Character.physicsBody?.categoryBitMask = PhysicsCategory.Character
         Character.physicsBody?.collisionBitMask = PhysicsCategory.Floor | PhysicsCategory.Pillar
-        Character.physicsBody?.contactTestBitMask = PhysicsCategory.Floor | PhysicsCategory.Pillar
-        Character.physicsBody?.affectedByGravity = true
+        Character.physicsBody?.contactTestBitMask = PhysicsCategory.Floor | PhysicsCategory.Pillar | PhysicsCategory.Score
+        Character.physicsBody?.affectedByGravity = false
         Character.physicsBody?.isDynamic = true
         
-        Character.zPosition = 2
+        Character.zPosition = 1
         
         self.addChild(Character)
     
     }
     
-    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let firstBody = contact.bodyA
+        let secondBody = contact.bodyB
+        
+        if (firstBody.categoryBitMask == PhysicsCategory.Score && secondBody.categoryBitMask == PhysicsCategory.Character) || (firstBody.categoryBitMask == PhysicsCategory.Character && secondBody.categoryBitMask == PhysicsCategory.Score) {
+            
+            score+=1
+            print(score)
+        }
+    }
     
     func createWalls(){
-        /*
-        let screenSize = UIScreen.main.bounds
-        let screenWidth = screenSize.width
-        let screenHeight = screenSize.height
-        */
+        
+        let scoreNode = SKSpriteNode()
+        
+        scoreNode.size = CGSize(width: 3, height: 500)
+        scoreNode.position = CGPoint(x: self.frame.width, y: scoreNode.frame.height/2)
+        scoreNode.physicsBody = SKPhysicsBody(rectangleOf: scoreNode.size)
+        scoreNode.physicsBody?.affectedByGravity = false
+        scoreNode.physicsBody?.isDynamic = false
+        scoreNode.physicsBody?.categoryBitMask = PhysicsCategory.Score
+        scoreNode.physicsBody?.collisionBitMask = 0
+        scoreNode.physicsBody?.contactTestBitMask = PhysicsCategory.Character
+        scoreNode.color = SKColor.blue
+        
+        let randomPosition = CGFloat.random(min: -self.frame.height/5, max: self.frame.height/5)
+        
+        scoreNode.position.y = scoreNode.position.y + randomPosition
+        //self.addChild(scoreNode)
+        
+        scoreNode.run(moveAndRemove)
+        
         wallPair = SKNode()
         let topWall = SKSpriteNode(imageNamed: "Pillar")
         let btmWall = SKSpriteNode(imageNamed: "Pillar")
-        /*
-        let topWall = SKSpriteNode(imageNamed: "PillarTop")
-        let btmWall = SKSpriteNode(imageNamed: "PillarBtm")
+        
+            /*
+        topWall.position = CGPoint(x: self.frame.width, y: 0 + self.frame.height/2.5)
+        btmWall.position = CGPoint(x: self.frame.width, y: 0 - self.frame.height/2.5)
         */
+        topWall.position = CGPoint(x: self.frame.width, y: 0 + Character.frame.height * 3.35)
+        btmWall.position = CGPoint(x: self.frame.width, y: 0 - Character.frame.height * 3.35)
         
-        topWall.position = CGPoint(x: self.frame.width/2, y: 0 + self.frame.height/4 + 80)
-        btmWall.position = CGPoint(x: self.frame.width/2, y: 0 - self.frame.height/4 - 25)
-        
-        topWall.setScale(5)
-        btmWall.setScale(5)
+        topWall.setScale(0.75)
+        btmWall.setScale(0.75)
         
         topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
         topWall.physicsBody?.categoryBitMask = PhysicsCategory.Pillar
@@ -125,8 +171,14 @@ class GameScene: SKScene {
         wallPair.addChild(topWall)
         wallPair.addChild(btmWall)
         
-        wallPair.zPosition = 1
+        wallPair.zPosition = 2
+        /*
+        let randomPosition = CGFloat.random(min: -self.frame.height/5, max: self.frame.height/5)*/
+        wallPair.position.y = wallPair.position.y + randomPosition
         
+        wallPair.addChild(scoreNode)
+        
+        wallPair.run(moveAndRemove)
         self.addChild(wallPair)
     }
     
@@ -174,11 +226,13 @@ class GameScene: SKScene {
         if gameStarted == false{
             
             gameStarted = true
-        
+            Character.physicsBody?.affectedByGravity = true
+            
             let spawn = SKAction.run({
                 () in
                 
                 self.createWalls()
+                
             })
             
             let delay = SKAction.wait(forDuration: 2.0)
@@ -186,25 +240,25 @@ class GameScene: SKScene {
             let spawnDelayForever = SKAction.repeatForever(spawnDelay)
             self.run(spawnDelayForever)
             
-            let distance = CGFloat(self.frame.width/2 + wallPair.frame.width)
-            let movePillars = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.0015 * distance))
+            let distance = CGFloat(2 * self.frame.width)
+            let movePillars = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.005 * distance))
             let removePillars = SKAction.removeFromParent()
             moveAndRemove = SKAction.sequence([movePillars, removePillars])
-        
+            
             Character.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             Character.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 400))
         }
         else{
             Character.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             Character.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 400))
-            print("touch begin")
-            super.touchesBegan(touches, with: event)
+            /*print("touch begin")
+            super.touchesBegan(touches, with: event)*/
         }
     }
         
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?){
-        print("touch ended")
-        super.touchesEnded(touches, with: event)
+       /* print("touch ended")
+        super.touchesEnded(touches, with: event)*/
         //for t in touches { self.touchUp(atPoint: t.location(in: self)) }
     }
 /*

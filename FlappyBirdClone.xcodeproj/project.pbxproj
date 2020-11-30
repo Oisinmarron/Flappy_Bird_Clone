@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E70651E8257548E800EFB7DF /* RandomFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70651E7257548E800EFB7DF /* RandomFunction.swift */; };
 		E7CF9C86256D2B3E00B078F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CF9C85256D2B3E00B078F6 /* AppDelegate.swift */; };
 		E7CF9C88256D2B3E00B078F6 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = E7CF9C87256D2B3E00B078F6 /* GameScene.sks */; };
 		E7CF9C8A256D2B3E00B078F6 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = E7CF9C89256D2B3E00B078F6 /* Actions.sks */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E70651E7257548E800EFB7DF /* RandomFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomFunction.swift; sourceTree = "<group>"; };
 		E7CF9C82256D2B3E00B078F6 /* FlappyBirdClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyBirdClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7CF9C85256D2B3E00B078F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7CF9C87256D2B3E00B078F6 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				E7CF9C87256D2B3E00B078F6 /* GameScene.sks */,
 				E7CF9C89256D2B3E00B078F6 /* Actions.sks */,
 				E7CF9C8B256D2B3E00B078F6 /* GameScene.swift */,
+				E70651E7257548E800EFB7DF /* RandomFunction.swift */,
 				E7CF9C8D256D2B3E00B078F6 /* GameViewController.swift */,
 				E7CF9C8F256D2B3E00B078F6 /* Main.storyboard */,
 				E7CF9C92256D2B4200B078F6 /* Assets.xcassets */,
@@ -269,6 +272,7 @@
 			files = (
 				E7CF9C8C256D2B3E00B078F6 /* GameScene.swift in Sources */,
 				E7CF9C8E256D2B3E00B078F6 /* GameViewController.swift in Sources */,
+				E70651E8257548E800EFB7DF /* RandomFunction.swift in Sources */,
 				E7CF9C86256D2B3E00B078F6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
