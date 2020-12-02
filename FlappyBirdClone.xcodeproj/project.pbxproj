@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E70651E8257548E800EFB7DF /* RandomFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70651E7257548E800EFB7DF /* RandomFunction.swift */; };
+		E70651F22577C3E700EFB7DF /* 04B_19__.TTF in Resources */ = {isa = PBXBuildFile; fileRef = E70651F12577C3E700EFB7DF /* 04B_19__.TTF */; };
 		E7CF9C86256D2B3E00B078F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7CF9C85256D2B3E00B078F6 /* AppDelegate.swift */; };
 		E7CF9C88256D2B3E00B078F6 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = E7CF9C87256D2B3E00B078F6 /* GameScene.sks */; };
 		E7CF9C8A256D2B3E00B078F6 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = E7CF9C89256D2B3E00B078F6 /* Actions.sks */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		E70651E7257548E800EFB7DF /* RandomFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomFunction.swift; sourceTree = "<group>"; };
+		E70651F12577C3E700EFB7DF /* 04B_19__.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = 04B_19__.TTF; sourceTree = "<group>"; };
 		E7CF9C82256D2B3E00B078F6 /* FlappyBirdClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyBirdClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7CF9C85256D2B3E00B078F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7CF9C87256D2B3E00B078F6 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 		E7CF9C84256D2B3E00B078F6 /* FlappyBirdClone */ = {
 			isa = PBXGroup;
 			children = (
+				E70651F12577C3E700EFB7DF /* 04B_19__.TTF */,
 				E7CF9C85256D2B3E00B078F6 /* AppDelegate.swift */,
 				E7CF9C87256D2B3E00B078F6 /* GameScene.sks */,
 				E7CF9C89256D2B3E00B078F6 /* Actions.sks */,
@@ -243,6 +246,7 @@
 			files = (
 				E7CF9C91256D2B3E00B078F6 /* Main.storyboard in Resources */,
 				E7CF9C88256D2B3E00B078F6 /* GameScene.sks in Resources */,
+				E70651F22577C3E700EFB7DF /* 04B_19__.TTF in Resources */,
 				E7CF9C93256D2B4200B078F6 /* Assets.xcassets in Resources */,
 				E7CF9C96256D2B4200B078F6 /* LaunchScreen.storyboard in Resources */,
 				E7CF9C8A256D2B3E00B078F6 /* Actions.sks in Resources */,

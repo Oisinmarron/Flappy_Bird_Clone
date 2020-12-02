@@ -51,10 +51,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createScene(){
         
+        // print(UIFont.familyNames)
         self.physicsWorld.contactDelegate = self
+        
+        for i in 0..<2{
+            let background = SKSpriteNode(imageNamed: "Background")
+            //background.anchorPoint = CGPoint(x: 0, y: 0)
+            background.position = CGPoint(x: CGFloat(i) * self.frame.width, y: 0)
+            background.name = "Background"
+            background.size = CGSize(width: self.frame.width, height: self.frame.height)
+            self.addChild(background)
+        }
         
         scoreLabel.position = CGPoint(x: 0, y: self.frame.height/4)
         scoreLabel.text = "\(score)"
+        scoreLabel.fontName = "04b_19"
+        scoreLabel.fontSize = 150
         scoreLabel.zPosition = 5
         
         self.addChild(scoreLabel)
@@ -112,7 +124,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // CHARACTER
         Character = SKSpriteNode(imageNamed: "Character")
         Character.size = CGSize(width: self.frame.width/2 * 0.3, height: self.frame.height/2 * 0.25)
-        Character.position = CGPoint(x: 0 - self.frame.width/4, y: Floor.frame.height + Character.frame.height - self.frame.height/2)
+        Character.position = CGPoint(x: 0 - self.frame.width/4, y: 0)
         
         Character.physicsBody = SKPhysicsBody(rectangleOf: Character.size)
         Character.physicsBody?.categoryBitMask = PhysicsCategory.Character
@@ -130,19 +142,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         
         createScene()
-        
     
     }
     
     func createBtn(){
             
-        restartBtn = SKSpriteNode(color: SKColor.blue, size: CGSize(width: self.frame.width * 0.15, height: self.frame.height * 0.05))
+        restartBtn = SKSpriteNode(imageNamed: "Play")
+        
+        restartBtn.setScale(0)
+        restartBtn.size = CGSize(width: self.frame.width * 0.2, height: self.frame.height * 0.1)
         
         restartBtn.position = CGPoint(x: 0, y: 0)
-        
         restartBtn.zPosition = 6
-        self.addChild(restartBtn)
         
+        self.addChild(restartBtn)
+        restartBtn.run(SKAction.scale(to: 1, duration: 0.3))
     }
     
     
@@ -156,10 +170,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             scoreLabel.text = "\(score)"
         }
         
-        if (firstBody.categoryBitMask == PhysicsCategory.Pillar && secondBody.categoryBitMask == PhysicsCategory.Character) || (firstBody.categoryBitMask == PhysicsCategory.Character && secondBody.categoryBitMask == PhysicsCategory.Pillar) {
+        else if (firstBody.categoryBitMask == PhysicsCategory.Pillar && secondBody.categoryBitMask == PhysicsCategory.Character) || (firstBody.categoryBitMask == PhysicsCategory.Character && secondBody.categoryBitMask == PhysicsCategory.Pillar) {
             
-            died = true
-            createBtn()
+            // Stops pillars moving, also stops all actions (i.e. creating pillars)
+            enumerateChildNodes(withName: "wallPair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+            }))
+            
+            if died == false{
+                died = true
+                createBtn()
+            }
+        }
+        
+        else if (firstBody.categoryBitMask == PhysicsCategory.Floor && secondBody.categoryBitMask == PhysicsCategory.Character) || (firstBody.categoryBitMask == PhysicsCategory.Character && secondBody.categoryBitMask == PhysicsCategory.Floor) {
+            
+            // Stops pillars moving, also stops all actions (i.e. creating pillars)
+            enumerateChildNodes(withName: "wallPair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+            }))
+            
+            if died == false{
+                died = true
+                createBtn()
+            }
         }
     }
     
@@ -183,6 +223,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         wallPair = SKNode()
+        wallPair.name = "wallPair"
+        
         let topWall = SKSpriteNode(imageNamed: "Pillar")
         let btmWall = SKSpriteNode(imageNamed: "Pillar")
         
@@ -335,5 +377,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 */
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        
+        if gameStarted == true && died == false{
+            enumerateChildNodes(withName: "Background", using: ({
+                (node, error) in
+                
+                let background = node as! SKSpriteNode
+                background.position = CGPoint(x: background.position.x - 2, y: background.position.y)
+                
+                // If background runs out, starts it again
+                if background.position.x <= -background.size.width{
+                    background.position = CGPoint(x: background.position.x + background.size.width * 2, y: background.position.y)
+                }
+            }))
+        }
     }
 }
