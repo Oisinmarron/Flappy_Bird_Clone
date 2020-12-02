@@ -30,12 +30,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var wallPair = SKNode()
     var moveAndRemove = SKAction()
     var gameStarted = Bool()
+    var died = Bool()
     
     var score = Int()
 
+    var restartBtn = SKSpriteNode()
     let scoreLabel = SKLabelNode()
     
-    override func didMove(to view: SKView) {
+    
+    func restartScene(){
+        
+        self.removeAllChildren()
+        self.removeAllActions()
+        died = false
+        score = 0
+        gameStarted = false
+        
+        createScene()
+    }
+    
+    func createScene(){
         
         self.physicsWorld.contactDelegate = self
         
@@ -110,8 +124,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Character.zPosition = 1
         
         self.addChild(Character)
+        
+    }
+    
+    override func didMove(to view: SKView) {
+        
+        createScene()
+        
     
     }
+    
+    func createBtn(){
+            
+        restartBtn = SKSpriteNode(color: SKColor.blue, size: CGSize(width: self.frame.width * 0.15, height: self.frame.height * 0.05))
+        
+        restartBtn.position = CGPoint(x: 0, y: 0)
+        
+        restartBtn.zPosition = 6
+        self.addChild(restartBtn)
+        
+    }
+    
     
     func didBegin(_ contact: SKPhysicsContact) {
         let firstBody = contact.bodyA
@@ -121,6 +154,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             score+=1
             scoreLabel.text = "\(score)"
+        }
+        
+        if (firstBody.categoryBitMask == PhysicsCategory.Pillar && secondBody.categoryBitMask == PhysicsCategory.Character) || (firstBody.categoryBitMask == PhysicsCategory.Character && secondBody.categoryBitMask == PhysicsCategory.Pillar) {
+            
+            died = true
+            createBtn()
         }
     }
     
@@ -253,10 +292,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             Character.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 400))
         }
         else{
-            Character.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Character.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 400))
-            /*print("touch begin")
-            super.touchesBegan(touches, with: event)*/
+            if died == true{
+                // Do nothing
+            }
+            else{
+                Character.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                Character.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 400))
+            }
+        }
+        
+        
+        for touch in touches{
+            let location = touch.location(in: self)
+            
+            if died == true{
+                if restartBtn.contains(location){
+                    restartScene()
+                }
+            }
         }
     }
         
