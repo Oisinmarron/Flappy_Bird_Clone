@@ -33,10 +33,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var score = Int()
 
+    let scoreLabel = SKLabelNode()
     
     override func didMove(to view: SKView) {
         
         self.physicsWorld.contactDelegate = self
+        
+        scoreLabel.position = CGPoint(x: 0, y: self.frame.height/4)
+        scoreLabel.text = "\(score)"
+        scoreLabel.zPosition = 5
+        
+        self.addChild(scoreLabel)
         
         // GRASS
         Test = SKSpriteNode(imageNamed: "Grass")
@@ -113,7 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if (firstBody.categoryBitMask == PhysicsCategory.Score && secondBody.categoryBitMask == PhysicsCategory.Character) || (firstBody.categoryBitMask == PhysicsCategory.Character && secondBody.categoryBitMask == PhysicsCategory.Score) {
             
             score+=1
-            print(score)
+            scoreLabel.text = "\(score)"
         }
     }
     
@@ -121,8 +128,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let scoreNode = SKSpriteNode()
         
-        scoreNode.size = CGSize(width: 3, height: 500)
-        scoreNode.position = CGPoint(x: self.frame.width, y: scoreNode.frame.height/2)
+        scoreNode.size = CGSize(width: 3, height: Character.size.height * 2)
+        scoreNode.position = CGPoint(x: self.frame.width, y: 0)
         scoreNode.physicsBody = SKPhysicsBody(rectangleOf: scoreNode.size)
         scoreNode.physicsBody?.affectedByGravity = false
         scoreNode.physicsBody?.isDynamic = false
@@ -134,23 +141,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let randomPosition = CGFloat.random(min: -self.frame.height/5, max: self.frame.height/5)
         
         scoreNode.position.y = scoreNode.position.y + randomPosition
-        //self.addChild(scoreNode)
         
-        scoreNode.run(moveAndRemove)
         
         wallPair = SKNode()
         let topWall = SKSpriteNode(imageNamed: "Pillar")
         let btmWall = SKSpriteNode(imageNamed: "Pillar")
         
-            /*
-        topWall.position = CGPoint(x: self.frame.width, y: 0 + self.frame.height/2.5)
-        btmWall.position = CGPoint(x: self.frame.width, y: 0 - self.frame.height/2.5)
-        */
-        topWall.position = CGPoint(x: self.frame.width, y: 0 + Character.frame.height * 3.35)
-        btmWall.position = CGPoint(x: self.frame.width, y: 0 - Character.frame.height * 3.35)
         
         topWall.setScale(0.75)
         btmWall.setScale(0.75)
+        
+        topWall.position = CGPoint(x: self.frame.width, y: topWall.size.height/2 + Character.size.height)
+        
+        btmWall.position = CGPoint(x: self.frame.width, y: -btmWall.size.height/2 - Character.size.height)
+        
         
         topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
         topWall.physicsBody?.categoryBitMask = PhysicsCategory.Pillar
@@ -168,17 +172,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         topWall.zRotation = CGFloat(M_PI)
         
+        topWall.position.y = topWall.position.y + randomPosition
+        btmWall.position.y = btmWall.position.y + randomPosition
+        
         wallPair.addChild(topWall)
         wallPair.addChild(btmWall)
         
         wallPair.zPosition = 2
-        /*
-        let randomPosition = CGFloat.random(min: -self.frame.height/5, max: self.frame.height/5)*/
-        wallPair.position.y = wallPair.position.y + randomPosition
         
         wallPair.addChild(scoreNode)
-        
         wallPair.run(moveAndRemove)
+        
         self.addChild(wallPair)
     }
     
